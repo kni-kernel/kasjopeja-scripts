@@ -1,0 +1,13 @@
+collections:
+    name: name of subject
+    ects: ects points
+    module: name of course
+    semester: number of semester (0 if elective)
+    Hours: {
+        Lectures: hours,
+        Auditorium classes: hours,
+        Laboratory classes: hours,
+        Seminar classes: hours,
+        Project classes: hours,
+        Practical classes: hours
+    }
