@@ -1,13 +1,13 @@
 collections:
     name: name of subject
     ects: ects points
-    module: name of course
+    fieldOfStudy: name of field of study
     semester: number of semester (0 if elective)
-    Hours: {
-        Lectures: hours,
-        Auditorium classes: hours,
-        Laboratory classes: hours,
-        Seminar classes: hours,
-        Project classes: hours,
-        Practical classes: hours
+    hours: {
+        lectures: hours,
+        auditorium classes: hours,
+        laboratory classes: hours,
+        seminar classes: hours,
+        project classes: hours,
+        practical classes: hours
     }
