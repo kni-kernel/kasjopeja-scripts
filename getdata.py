@@ -1,5 +1,10 @@
 import requests
 import json
+import sys
+
+if len(sys.argv) < 3:
+    print("Provide MongoDB connection parameters -> hostAddress port")
+    sys.exit()
 
 try:
     from pymongo import MongoClient
@@ -19,9 +24,15 @@ class MongoDBClient(object):
         if collection_name:
             self._collection = self._database[collection_name]
 
+    def clean(self, collection_name=None):
+        if collection_name is not None:
+            self._collection.remove({})
+
     def insert(self, post):
         post_id = self._collection.insert_one(post).inserted_id
         return post_id
+
+print("[*] Preparing data for MongoDB")
 
 departments = ['wgig', 'wimiip', 'weaiiib', 'wieit', 'wimir', 'wggios', 'wggiis', 'wimic', 'wo', 'wmn', 'wwnig', 'wz', 'wms', 'wh', 'wfiis']
 
@@ -56,21 +67,33 @@ for key, item in coursesForDownload.items():
             urlP = urlBase + '{}/study_plans/{}'.format(key, k['name'])
             responseP = requests.get(urlP, headers=headers)
             dataP = json.loads(responseP.text) if responseP.text is not None else None
-            for sem in dataP['syllabus']['study_plan']['semesters']:
-                for g in sem['groups']:
+            lSem = len(dataP['syllabus']['study_plan']['semesters'])
+            for semi, sem in enumerate(dataP['syllabus']['study_plan']['semesters']):
+                lGroup = len(sem['groups'])
+                for gi, g in enumerate(sem['groups']):
+                    lG = len(g['groups']) if 'groups' in g.keys() else 0
                     if 'modules' in g.keys():
-                        for m in g['modules']:
+                        lMod = len(g['modules'])
+                        for mi, m in enumerate(g['modules']):
                             subjectForCourse.append({'name': m['name'], 'ects': m['ects_credits'],
-                                'fieldOfStudy': k['shortName'], 'semester': sem['number'], 
+                                'fieldOfStudy': k['shortName'], 'semester': sem['number'],
                                 'hours': {h['name'].lower():h['classes_hours'] for h in m['form_of_classes']}})
                     elif 'groups' in g.keys():
                         for go in g['groups']:
                             for mo in go['modules']:
-                                print(mo)
+                                #print(mo)
+                                pass
+else:
+    print("Done!")
 
-print('[*] Pushing data to MongoDB ')
-mongodbClient = MongoDBClient(database_name='KasjopejaDB', collection_name=w)
+print('[*] Peparing client form MongoDB ')
+mongodbClient = MongoDBClient(host=sys.argv[1], port=int(sys.argv[2]), database_name='KasjopejaDB', collection_name=w)
 
-for collection in subjectForCourse:
-    print('[!] Inserting - ', collection)
+print('[!] Clearing old data from collection: ', w)
+mongodbClient.clean(w)
+
+for i, collection in enumerate(subjectForCourse):
+    print("[!] Inserting - %.2f%s done" % (i/len(subjectForCourse)*100, "%"))
     mongodbClient.insert(collection)
+else:
+    print("100% Done!")
