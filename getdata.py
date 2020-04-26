@@ -2,8 +2,8 @@ import requests
 import json
 import sys
 
-if len(sys.argv) < 3:
-    print("Provide MongoDB connection parameters -> hostAddress port")
+if len(sys.argv) < 5:
+    print("Provide MongoDB connection parameters -> hostAddress port databaseName collectionName")
     sys.exit()
 
 try:
@@ -24,9 +24,8 @@ class MongoDBClient(object):
         if collection_name:
             self._collection = self._database[collection_name]
 
-    def clean(self, collection_name=None):
-        if collection_name is not None:
-            self._collection.remove({})
+    def clean(self):
+        self._collection.remove({})
 
     def insert(self, post):
         post_id = self._collection.insert_one(post).inserted_id
@@ -87,10 +86,10 @@ else:
     print("Done!")
 
 print('[*] Peparing client form MongoDB ')
-mongodbClient = MongoDBClient(host=sys.argv[1], port=int(sys.argv[2]), database_name='KasjopejaDB', collection_name=w)
+mongodbClient = MongoDBClient(host=sys.argv[1], port=int(sys.argv[2]), database_name=sys.argv[3], collection_name=sys.argv[4])
 
-print('[!] Clearing old data from collection: ', w)
-mongodbClient.clean(w)
+print('[!] Clearing old data from collection: ', sys.argv[4])
+mongodbClient.clean()
 
 for i, collection in enumerate(subjectForCourse):
     print("[!] Inserting - %.2f%s done" % (i/len(subjectForCourse)*100, "%"))
