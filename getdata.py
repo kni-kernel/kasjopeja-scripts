@@ -61,7 +61,6 @@ for year in academicYears:
                     name = s['url'].split('/')
                     nameMain = name[len(name) - 1]
                     courseName.append({'name': nameMain, 'shortName': s['name']})
-                    print()
                 levelsName.append({'level': l['level'], 'courseName': courseName})
             coursesForDownload[w] = levelsName
 
@@ -71,8 +70,6 @@ for year in academicYears:
         for i,singleLevel in enumerate(item):
             for j,k in enumerate(singleLevel['courseName']):
                 urlP = urlBase + '{}/study_plans/{}'.format(key, k['name'])
-                print(urlP)
-                sys.exit()
                 responseP = requests.get(urlP, headers=headers)
                 dataP = json.loads(responseP.text) if responseP.text is not None else None
                 lSem = len(dataP['syllabus']['study_plan']['semesters'])
@@ -84,8 +81,8 @@ for year in academicYears:
                             lMod = len(g['modules'])
                             for mi, m in enumerate(g['modules']):
                                 subjectForCourse.append({'name': m['name'], 'ects': m['ects_credits'],
+                                    'level': singleLevel['level'], 'academicYear': year,
                                     'fieldOfStudy': k['shortName'], 'semester': sem['number'],
-                                    'academicYear': year,
                                     'hours': {h['name'].lower():h['classes_hours'] for h in m['form_of_classes']}})
                         elif 'groups' in g.keys():
                             for go in g['groups']:

@@ -1,9 +1,10 @@
 collections:
     name: name of subject
     ects: ects points
+    academicYear: start of the academic year (eg. 2017-2018) 
+    level: level of fieldOfStudy
     fieldOfStudy: name of field of study
     semester: number of semester (0 if elective)
-    academicYear: start of the academic year for given subject (eg. 2017-2018) 
     hours: {
         lectures: hours,
         auditorium classes: hours,
