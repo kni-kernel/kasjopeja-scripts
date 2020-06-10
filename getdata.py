@@ -3,8 +3,8 @@ import json
 import sys
 import datetime
 
-if len(sys.argv) < 5:
-    print("Provide MongoDB connection parameters -> hostAddress port databaseName collectionName")
+if len(sys.argv) < 7:
+    print("Provide MongoDB connection parameters -> hostAddress port databaseName collectionName username password")
     sys.exit()
 
 try:
@@ -13,9 +13,9 @@ except ImportError:
     raise ImportError('PyMongo is not installed')
 
 class MongoDBClient(object):
-    def __init__(self, host='localhost', port=27017, database_name=None, collection_name=None):
+    def __init__(self, host='localhost', port=27017, database_name=None, collection_name=None, username=None, password=None):
         try:
-            self._connection = MongoClient(host=host, port=port, maxPoolSize=200)
+            self._connection = MongoClient(host=host, port=port, maxPoolSize=200, username=username, password=password)
         except Exception as error:
             raise Exception(error)
         self._database = None
@@ -34,7 +34,8 @@ class MongoDBClient(object):
 
 print("[*] Preparing data for MongoDB")
 
-departments = ['wgig', 'wimiip', 'weaiiib', 'wieit', 'wimir', 'wggios', 'wggiis', 'wimic', 'wo', 'wmn', 'wwnig', 'wz', 'wms', 'wh', 'wfiis']
+departments = ['wgig', 'wimiip', 'weaiiib', 'wieit', 'wimir', 'wggios', 'wggiis', 'wimic', 'wo', 'wmn', 'wwnig', 'wz',
+               'wms', 'wh', 'wfiis']
 
 now = datetime.datetime.now()
 academicYears = [f'{str(x)}-{str(x+1)}' for x in range(2012, int(now.year))]
@@ -95,7 +96,8 @@ for year in academicYears:
         print("Done!")
 
     print('[*] Peparing client form MongoDB ')
-    mongodbClient = MongoDBClient(host=sys.argv[1], port=int(sys.argv[2]), database_name=sys.argv[3], collection_name=sys.argv[4])
+    mongodbClient = MongoDBClient(host=sys.argv[1], port=int(sys.argv[2]), database_name=sys.argv[3],
+                              collection_name=sys.argv[4], username=sys.argv[5], password=sys.argv[6])
 
     print('[!] Clearing old data from collection: ', sys.argv[4])
     mongodbClient.clean()
@@ -104,4 +106,4 @@ for year in academicYears:
         print("[!] Inserting - %.2f%s done" % (i/len(subjectForCourse)*100, "%"))
         mongodbClient.insert(collection)
     else:
-        print("100% Done!")
+        print("100% Done! For academic year: {}".format(year))
