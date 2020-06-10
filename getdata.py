@@ -81,13 +81,12 @@ for year in academicYears:
                             lMod = len(g['modules'])
                             for mi, m in enumerate(g['modules']):
                                 subjectForCourse.append({'name': m['name'], 'ects': m['ects_credits'],
-                                    'level': singleLevel['level'], 'academicYear': year,
-                                    'fieldOfStudy': k['shortName'], 'semester': sem['number'],
+                                    'level': 1 if singleLevel['level']=="Studia I stopnia" else 2 , 'academicYear': year.split("-")[0]+"/"+year.split("-")[1],
+                                    'fieldOfStudy': ''.join([x[0] for x in k['shortName'].split()]).upper(), 'semester': sem['number'],
                                     'hours': {h['name'].lower():h['classes_hours'] for h in m['form_of_classes']}})
                         elif 'groups' in g.keys():
                             for go in g['groups']:
                                 for mo in go['modules']:
-                                    #print(mo)
                                     pass
     else:
         print("Done!")

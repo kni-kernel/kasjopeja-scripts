@@ -1,15 +1,15 @@
 collections:
-    name: name of subject
-    ects: ects points
-    academicYear: start of the academic year (eg. 2017-2018) 
-    level: level of fieldOfStudy
-    fieldOfStudy: name of field of study
-    semester: number of semester (0 if elective)
+    name: name of subject (eg. Matematyczne metody fizyki)
+    ects: ects points (eg. 5)
+    academicYear: start of the academic year (eg. 2017/2018) 
+    level: level of fieldOfStudy (1 or 2)
+    fieldOfStudy: abbrieviated name of field of study (eg. IS)
+    semester: number of semester (0 if elective) (eg. 1)
     hours: {
-        lectures: hours,
-        auditorium classes: hours,
-        laboratory classes: hours,
-        seminar classes: hours,
-        project classes: hours,
-        practical classes: hours
+        lectures: hours (eg. 30),
+        auditorium classes: hours (eg. 30),
+        laboratory classes: hours (eg. 30),
+        seminar classes: hours (eg. 30),
+        project classes: hours (eg. 30),
+        practical classes: hours (eg. 30)
     }
